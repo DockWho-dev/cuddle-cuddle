@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Lambda API Gateway URL
-API_BASE_URL = "https://your-lambda-api-url/dev"
+API_BASE_URL = "https://t47nht6fk5.execute-api.us-east-1.amazonaws.com/dev"
 
 st.title("🎭 공연 일정 검색 봇")
 
