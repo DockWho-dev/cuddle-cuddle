@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import pandas as pd
 
 # Lambda API Gateway URL
 API_BASE_URL = "https://t47nht6fk5.execute-api.us-east-1.amazonaws.com/dev"
@@ -13,7 +14,40 @@ if st.button("검색"):
     if actor_name:
         response = requests.get(f"{API_BASE_URL}/search_actor", params={"name": actor_name})
         if response.status_code == 200:
-            st.json(response.json())
+            data = response.json()
+            df = pd.DataFrame([
+                {
+                    "날짜": item["date"],
+                    "시간": item["time"],
+                    "제목": item["title"],
+                    "장소": item["location"],
+                    "배우1": item["cast"]["배우1"],
+                    "배우2": item["cast"]["배우2"],
+                    "배우3": item["cast"]["배우3"],
+                    "배우4": item["cast"]["배우4"],
+                    "배우5": item["cast"]["배우5"],
+                    "이벤트": item["event"]
+                }
+                for item in data
+            ])
+            st.markdown("""
+                <style>
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    th {
+                        background-color: #f4f4f4;
+                    }
+                </style>
+                """, unsafe_allow_html=True)
+
+            st.table(df)
         else:
             st.error("배우 정보를 가져오지 못했습니다.")
 
